@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--绑定接口  -->
+<mapper namespace="com.dao.OrderDao">	
+	<select id="selectOrder" resultMap="selectOd" parameterType="int">
+	SELECT  od.id,
+	 od.goodsID,
+	OD.`COUNT`,
+	goods.goodsName,
+	goods.goodsPrice
+FROM `order` as od ,goods
+where Uid=#{Uid} and goods.goodsId=od.goodsId
+
+ 	</select>
+	<resultMap type="com.beans.Order" id="selectOd">
+			<id column="id" property="id" />
+			<result column="Uid" property="Uid"/>
+			<result column="goodsId" property="goodsId"/>
+			<result column="count" property="count"/>
+			<result column="status" property="status"/>
+			<association property="goods" javaType="com.beans.Goods">
+				<id column=" goodsId" property=" goodsId"/>
+				<result column="goodsName" property="goodsName"/>
+				<result column="goodsPrice" property="goodsPrice"/>			
+			</association>
+	</resultMap>
+	
+	<select id="select"></select>
+	<update id="updateOrder" parameterType="com.beans.Order">
+		update `order` set count = #{count} where uid =#{uid} and goodsId = #{goodsId}
+	</update>
+	
+	<select id="selectOrderByUidGoodsId" resultType="com.beans.Order" parameterType="int">
+		SELECT * FROM `order` WHERE  uid = #{param1}  and  goodsId = #{param2}
+	</select>
+	<update id="changCounts" parameterType="int">
+	update `order` set `count` =#{param2}  where id=#{param1}; 
+	</update>
+	<delete id="deleteOrder" parameterType="int">
+	delete from `order` where id=#{id};
+	</delete>
+	<insert id="insertOrder" parameterType="int">
+	insert into `order` (Uid,goodsId,`count`)  values(#{param1},#{param2},1);
+	</insert>
+</mapper>

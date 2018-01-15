@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--绑定接口  -->
+<mapper namespace="com.dao.GoodsDao">	
+	<!--多条件分页查询  -->
+	<select id="selectGoodsByPage" resultType="com.beans.Goods" parameterType="com.util.GoodsSearchUtil">
+		SELECT * FROM goods
+ 		<where>
+			<if test="goodsType != '' and goodsType != null and goodsType != '全部商品'">
+				goodsType=#{goodsType}
+			</if>
+			<if test="goodsName !='' and goodsName != null">
+				AND goodsName like '%${goodsName}%'
+			</if>
+		</where> 
+		limit #{start},#{pageSize}
+	</select>
+	
+	<!--多条件查询商品总数  -->
+	<select id="selectGoodsNum" resultType="int" parameterType="com.util.GoodsSearchUtil">
+		SELECT count(1) FROM goods
+		<where>
+		<if test="goodsType != '' and goodsType != null and goodsType != '全部商品'">
+			goodsType=#{goodsType}
+		</if>
+		<if test="goodsName !='' and goodsName != null">
+			AND goodsName like '%${goodsName}%'
+		</if>
+		</where> 
+	</select>
+	
+	<!--根据goodId查询商品信息  -->
+	<select id="selectGoodsById" resultType="com.beans.Goods" parameterType="int">
+		SELECT * FROM goods where goodsId=#{goodsId}
+	</select>
+	
+	<!--后台多条件查询  -->
+	<select id="selectGoodsBg" resultType="com.beans.Goods" parameterType="com.util.GoodsSearchBg">
+		SELECT * FROM goods
+ 		<where>
+ 			<if test="goodsId != '' and goodsId != null">
+				goodsId=#{goodsId}
+			</if>
+			<if test="goodsType != '' and goodsType != null and goodsType != '全部商品'">
+				and goodsType=#{goodsType}
+			</if>
+			<if test="goodsName !='' and goodsName != null">
+				AND goodsName like '%${goodsName}%'
+			</if>
+		and goodsPrice between #{minPrice} and #{maxPrice}
+		</where> 
+	</select>	
+	
+	<!--根据goodId删除品信息  -->
+	<delete id="deleteGoodsById" parameterType="int">
+		delete from goods where goodsId=#{goodsId}
+	</delete>
+	
+	<!--添加商品  -->
+	<insert id="add" parameterType="com.beans.Goods">
+		INSERT INTO `goods` VALUES (null, null, #{goodsName}, #{goodsType}, #{goodsPrice}, '0', #{image}, #{description}, #{inventory}); 
+	</insert>
+</mapper>
