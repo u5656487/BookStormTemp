@@ -4,3 +4,5 @@
  
  
 2. Using MySQL, the database is in the **config** folder.
+
+3. I use svn in this project, the coding format is *gbk*, so there exits some random codes.
